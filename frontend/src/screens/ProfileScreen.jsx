@@ -47,11 +47,11 @@ const ProfileScreen = () => {
     }
   return (
     <FormContainer>
-      <h1>Update Profile</h1>
+      <h1 style={{ color: '#fff', marginLeft:'150px' }}>Update Profile</h1>
 
       <Form onSubmit={submitHandler}>
       <Form.Group className='my-2' controlId='name'>
-            <Form.Label>Name </Form.Label>
+            <Form.Label style={{ color: '#fff' }}>Name </Form.Label>
             <Form.Control
                 type='name'
                 placeholder='Enter Name'
@@ -61,7 +61,7 @@ const ProfileScreen = () => {
         </Form.Group>
 
         <Form.Group className='my-2' controlId='email'>
-            <Form.Label>Email Address</Form.Label>
+            <Form.Label style={{ color: '#fff' }}>Email Address</Form.Label>
             <Form.Control
                 type='email'
                 placeholder='Enter Email'
@@ -71,7 +71,7 @@ const ProfileScreen = () => {
         </Form.Group>
 
         <Form.Group className='my-2' controlId='password'>
-            <Form.Label>Password</Form.Label>
+            <Form.Label style={{ color: '#fff' }}>Password</Form.Label>
             <Form.Control
                 type='password'
                 placeholder='Enter Password'
@@ -81,7 +81,7 @@ const ProfileScreen = () => {
         </Form.Group>
 
         <Form.Group className='my-2' controlId='confirmPassword'>
-            <Form.Label>Confirm Password</Form.Label>
+            <Form.Label style={{ color: '#fff' }}>Confirm Password</Form.Label>
             <Form.Control
                 type='password'
                 placeholder='Confirm Password'
@@ -92,7 +92,11 @@ const ProfileScreen = () => {
 
         {isLoading && <Loader/>}
 
-        <Button type='submit' variant='primary' className='mt-3'>
+        <Button type='submit' variant='primary' className='mt-3' style={{
+                  backgroundColor: '#4b4b4b',
+                  borderColor: '#666',
+                  color: '#fff',
+                }}>
             Update
         </Button>
 
