@@ -6,6 +6,7 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/dbConfig.js";
 const port = process.env.PORT || 3001;
 import userRoutes from './routes/userRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
 import cors from 'cors'
 
 connectDB();
@@ -17,6 +18,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 app.get('/',(req,res) => res.send('Server is ready'));
 
 app.use(notFound);

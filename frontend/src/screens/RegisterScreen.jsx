@@ -14,10 +14,12 @@ const RegisterScreen = () => {
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [image, setImage ] = useState(null);
+    const [imagePreview, setImagePreview ] = useState(null);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    
     const [register, { isLoading }] = useRegisterMutation();
     const { userInfo } = useSelector((state) => state.auth);
 
@@ -33,15 +35,38 @@ const RegisterScreen = () => {
             toast.error('Passwords do not macth');
         } else{
             try {
-                const res = await register({ name, email, password}).unwrap();
+                const formData = new FormData();
+                formData.append('name',name);
+                formData.append('email',email);
+                formData.append('password',password);
+                formData.append('image',image);
+
+                const res = await register(formData).unwrap();
+                console.log(res,'rreeeeeeeeessssssssssss');
                 
                 dispatch(setCredentials({...res}));
                 navigate('/');
             } catch (err) {
+                console.log(err);
+                
                 toast.error(err?.data?.message || err.error);
             }
         }
     }
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        
+        if(file){
+            setImage(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
   return (
     <FormContainer>
       <h1 style={{ color: '#fff', marginLeft:'200px' }}>Sign Up</h1>
@@ -86,6 +111,25 @@ const RegisterScreen = () => {
                 onChange={ (e) =>setConfirmPassword(e.target.value)}
             ></Form.Control>
         </Form.Group>
+
+        <Form.Group className='my-2' controlId='image'>
+                    <Form.Label style={{ color: '#fff' }}>Upload Image</Form.Label>
+                    <input
+                        type='file'
+                        accept='image/*'
+                        onChange={handleImageChange}
+                    />
+                    {imagePreview && (
+                        <div style={{ marginTop: '10px' }}>
+                            <img
+                                src={imagePreview}
+                                alt='Preview'
+                                style={{ maxWidth: '100px', maxHeight: 'auto', borderRadius: '8px', marginTop: '10px' }}
+                            />
+                        </div>
+                    )}
+                </Form.Group>
+
 
         {isLoading && <Loader/>}
 
