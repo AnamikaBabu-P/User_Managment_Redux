@@ -27,7 +27,7 @@ const handleFileUpload = async (req, res, next) => {
             }).end(req.file.buffer);
     } catch (error) {
         console.log(error.message)
-        // next(error);
+        next(error);
     }
 };
 
