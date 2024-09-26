@@ -21,6 +21,9 @@ import ProfileScreen from './screens/ProfileScreen.jsx';
 
 import AdminLogin from './adminScreens/adminLogin.jsx';
 import AdminHome from './adminScreens/adminHome.jsx';
+import UserList from './adminScreens/UserList.jsx';
+import UserEdit from './adminScreens/UserEdit.jsx';
+import CreateUser from './adminScreens/CreateUser.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,6 +41,9 @@ const router = createBrowserRouter(
       
       <Route path='' element = {<AdminPrivateRoute/>}>
       <Route path='/admin-home' element={<AdminHome/>}/>
+      <Route path='/user-list' element={<UserList/>}/>
+      <Route path='/user-data/:id' element={<UserEdit/>}/>
+      <Route path='/create-user' element={<CreateUser/>}/>
       </Route>
 
     </Route>

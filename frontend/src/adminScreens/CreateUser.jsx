@@ -1,70 +1,75 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Form, Button} from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector} from 'react-redux';
 import FormContainer from "../components/FormContainer";
 import { toast } from 'react-toastify'
 import Loader from "../components/Loader";
+import { useRegisterMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
-import { useUpdateUserMutation } from "../slices/usersApiSlice";
 
 
-const ProfileScreen = () => {
+const RegisterScreen = () => {
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [image,setImage] = useState('');
-    console.log(image,'the img')
+    const [image, setImage ] = useState(null);
+    const [imagePreview, setImagePreview ] = useState(null);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    
+    const [register, { isLoading }] = useRegisterMutation();
     const { userInfo } = useSelector((state) => state.auth);
-    const [updateProfile, { isLoading }] = useUpdateUserMutation();
-
-    const previewFile = (e) => {
-        const file = e.target.files[0];
-        setFileToBase(file);
-      };
-      
-      const setFileToBase = (file) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          setImage(reader.result);
-        };
-      };
 
     useEffect(() => {
-        setName(userInfo.name);
-        setEmail(userInfo.email);
-        console.log(userInfo)
-        setImage(userInfo.image);
-    },[userInfo.name, userInfo.email, userInfo.image]);
+        if(userInfo) {
+            navigate('/');
+        }
+    },[navigate, userInfo]);
 
     const submitHandler= async(e)=>{
         e.preventDefault();
         if(password !== confirmPassword){
             toast.error('Passwords do not macth');
         } else{
-           try {
-            const res = await updateProfile({
-              _id: userInfo._id,
-              name,
-              email,
-              password,
-              image
-            }).unwrap();
-            dispatch(setCredentials({...res}));
-            toast.success('Profile updated');
-           } catch (err) {
-            toast.error(err?.data?.message || err.error)
-           }
+            try {
+                const formData = new FormData();
+                formData.append('name',name);
+                formData.append('email',email);
+                formData.append('password',password);
+                formData.append('image',image);
+
+                const res = await register(formData).unwrap();
+                console.log(res,'rreeeeeeeeessssssssssss');
+                
+                dispatch(setCredentials({...res}));
+                navigate('/');
+            } catch (err) {
+                console.log(err);
+                
+                toast.error(err?.data?.message || err.error);
+            }
         }
     }
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        
+        if(file){
+            setImage(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
   return (
     <FormContainer>
-      <h1 style={{ color: '#fff', marginLeft:'150px' }}>Update Profile</h1>
+      <h1 style={{ color: '#fff', marginLeft:'200px' }}>Sign Up</h1>
 
       <Form onSubmit={submitHandler}>
       <Form.Group className='my-2' controlId='name'>
@@ -107,11 +112,24 @@ const ProfileScreen = () => {
             ></Form.Control>
         </Form.Group>
 
-        <Form.Group className="my-2" controlId="image">
-          <Form.Label>Image</Form.Label>
-          <Form.Control type="file" name="image" onChange={previewFile}></Form.Control>
-          {image && <img src={image} value={image} height="200" alt="Image preview" className="mt-3" />}
-        </Form.Group>
+        <Form.Group className='my-2' controlId='image'>
+                    <Form.Label style={{ color: '#fff' }}>Upload Image</Form.Label>
+                    <input
+                        type='file'
+                        accept='image/*'
+                        onChange={handleImageChange}
+                    />
+                    {imagePreview && (
+                        <div style={{ marginTop: '10px' }}>
+                            <img
+                                src={imagePreview}
+                                alt='Preview'
+                                style={{ maxWidth: '100px', maxHeight: 'auto', borderRadius: '8px', marginTop: '10px' }}
+                            />
+                        </div>
+                    )}
+                </Form.Group>
+
 
         {isLoading && <Loader/>}
 
@@ -120,12 +138,17 @@ const ProfileScreen = () => {
                   borderColor: '#666',
                   color: '#fff',
                 }}>
-            Update
+            Sign Up
         </Button>
 
+        <Row className='py-3'>
+            <Col style={{ color: '#fff' }}>
+                Already have an account? <Link to='/login' style={{ color: '#fff' }}>Login</Link>
+            </Col>
+        </Row>
       </Form>
     </FormContainer>
   )
 }
 
-export default ProfileScreen;
+export default RegisterScreen;

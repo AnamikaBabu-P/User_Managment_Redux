@@ -22,6 +22,71 @@ const authAdmin = asyncHandler(async (req,res) =>{
     
 });
 
+ const viewUser = asyncHandler(async(req,res)=>{
+    const userDetails =await User.find()
+    res.json(userDetails)
+ });
+
+ const userData = asyncHandler(async(req,res)=>{
+    const {id} = req.params
+   console.log(id,'iiiiiiiiiiiii');
+   
+});
+
+const updateUser = asyncHandler(async(req,res)=>{
+     
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+    console.log("jjjjjjjjjjj");
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+    if (user) {
+      res.status(201).json("deletedUser");
+    } else {
+      res.status(404);
+      throw new Error("User not found");
+    }
+  });
+
+const createUser = asyncHandler(async(req,res)=>{
+    const {name,email,password} = req.body;
+
+    const image = {
+        public_id: req.file.cloudinary_public_id,
+        url: req.file.cloudinary_url};
+    
+    const userExists = await User.findOne({email});
+    if(userExists){
+        res.status(400);
+        throw new Error('User already exists');
+    }
+    
+    const user = await User.create({
+        name,
+        email,
+        password,
+        image
+    });
+
+    if(user) {
+        generateToken(res, user._id);
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email
+        });
+    } else {
+        res.status(400);
+        throw new Error('Invalid user data');
+    }
+})
+
 export {
-    authAdmin
+    authAdmin,
+    viewUser,
+    userData,
+    updateUser,
+    createUser,
+    deleteUser
 }

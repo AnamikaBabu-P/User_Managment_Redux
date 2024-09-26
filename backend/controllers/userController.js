@@ -4,6 +4,7 @@ import User from '../models/userModel.js';
 import cloudinary from '../utils/cloudinary.js';
 
 import multer from 'multer';
+import { updateUser } from './adminController.js';
 
 const storage = multer.memoryStorage();
 const upload = multer({storage:storage});
@@ -75,13 +76,16 @@ const registerUser = asyncHandler(async (req,res) =>{
         password,
         image
     });
+    console.log(user,'sssssssssssssssssss');
+    
 
     if(user) {
         generateToken(res, user._id);
         res.status(201).json({
             _id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            image: user.image.url
         });
     } else {
         res.status(400);
@@ -102,14 +106,16 @@ const getUserProfile = asyncHandler(async (req,res) =>{
     const user = {
         _id: req.user._id,
         name: req.user.name,
-        email: req.user.email
+        email: req.user.email,
+        image: req.user.image,
     }
     res.status(200).json(user);
 });
 
 const updateUserProfile = asyncHandler(async (req,res) =>{
     const user = await User.findById(req.user._id);
-
+             console.log(req.body,'iiiiiiiiiiiii');
+             
     if(user){
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
@@ -120,7 +126,7 @@ const updateUserProfile = asyncHandler(async (req,res) =>{
         res.status(200).json({
             _id: updatedUser._id,
             name: updatedUser.name,
-            email: updatedUser.email
+            email: updatedUser.email,
         })
     }else{
         res.status(404);

@@ -1,46 +1,45 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Form, Button} from "react-bootstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Form, Button, Row, Col} from "react-bootstrap";
 import { useDispatch, useSelector} from 'react-redux';
 import FormContainer from "../components/FormContainer";
 import { toast } from 'react-toastify'
 import Loader from "../components/Loader";
 import { setCredentials } from "../slices/authSlice";
-import { useUpdateUserMutation } from "../slices/usersApiSlice";
+import { useUserDataMutation } from "../slices/adminApiSlice";
 
+////
 
-const ProfileScreen = () => {
+const UserEdit = () => {
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [image,setImage] = useState('');
-    console.log(image,'the img')
+    const [image, setImage] = useState('');
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { userInfo } = useSelector((state) => state.auth);
-    const [updateProfile, { isLoading }] = useUpdateUserMutation();
-
-    const previewFile = (e) => {
-        const file = e.target.files[0];
-        setFileToBase(file);
-      };
-      
-      const setFileToBase = (file) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          setImage(reader.result);
-        };
-      };
-
+    const [findUser] = useUserDataMutation();
+    // const [updateProfile, { isLoading }] = useUpdateUserMutation();
+    const {id} = useParams();
     useEffect(() => {
-        setName(userInfo.name);
-        setEmail(userInfo.email);
-        console.log(userInfo)
-        setImage(userInfo.image);
-    },[userInfo.name, userInfo.email, userInfo.image]);
+    const fetchUserData = async () => {
+      try {
+        const { data } = await findUser(id);
+        setName(data.name);
+        setEmail(data.email);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+  
+    fetchUserData();
+  }, [findUser, id]);
+
+  console.log(email,'eeeeeeeeeeeeeee');
+  
+
 
     const submitHandler= async(e)=>{
         e.preventDefault();
@@ -49,13 +48,12 @@ const ProfileScreen = () => {
         } else{
            try {
             const res = await updateProfile({
-              _id: userInfo._id,
+              _id:id,
               name,
               email,
-              password,
-              image
+              password
             }).unwrap();
-            dispatch(setCredentials({...res}));
+            navigate('/user-list')
             toast.success('Profile updated');
            } catch (err) {
             toast.error(err?.data?.message || err.error)
@@ -107,13 +105,7 @@ const ProfileScreen = () => {
             ></Form.Control>
         </Form.Group>
 
-        <Form.Group className="my-2" controlId="image">
-          <Form.Label>Image</Form.Label>
-          <Form.Control type="file" name="image" onChange={previewFile}></Form.Control>
-          {image && <img src={image} value={image} height="200" alt="Image preview" className="mt-3" />}
-        </Form.Group>
-
-        {isLoading && <Loader/>}
+        {/* {isLoading && <Loader/>} */}
 
         <Button type='submit' variant='primary' className='mt-3' style={{
                   backgroundColor: '#4b4b4b',
@@ -128,4 +120,4 @@ const ProfileScreen = () => {
   )
 }
 
-export default ProfileScreen;
+export default UserEdit;

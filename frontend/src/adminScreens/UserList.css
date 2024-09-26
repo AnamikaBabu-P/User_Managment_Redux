@@ -1,0 +1,42 @@
+/* UserList.css */
+
+body {
+    background-color: #2d2d2d;
+  }
+  
+  h1 {
+    color: #f5f5f5;
+  }
+  
+  .table-dark {
+    background-color: #333;
+  }
+  
+  .table-dark th,
+  .table-dark td {
+    color: #f1f1f1;
+  }
+  
+  .search-bar {
+    background-color: #4a4a4a;
+    color: white;
+    border: 1px solid #6a6a6a;
+  }
+  
+  .search-bar::placeholder {
+    color: #d1d1d1;
+  }
+  
+  .img-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  
+  .img-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
