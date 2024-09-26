@@ -3,6 +3,7 @@ const adminRouter = express.Router();
 
 
 import { authAdmin,
+        logoutAdmin,
         viewUser,
         userData,
         updateUser,
@@ -11,6 +12,7 @@ import { authAdmin,
  } from '../controllers/adminController.js';
 
 adminRouter.post('/admin-login',authAdmin);
+adminRouter.post('/admin-logout',logoutAdmin);
 adminRouter.get('/user-list',viewUser);
 adminRouter.get('/user-data/:id',userData);
 adminRouter.put('/update-user',updateUser);

@@ -26,7 +26,6 @@ const AdminLogin = () => {
         try {
             const res = await adminLogin({ email, password}).unwrap();
             dispatch(setAdminCredentials({...res}));
-            console.log('login response',res);
             
             if(res){
                 navigate('/admin-home');

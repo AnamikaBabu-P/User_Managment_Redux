@@ -1,13 +1,31 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { adminLogout } from '../slices/adminAuthSlice';
+import { useAdminLogoutMutation } from '../slices/adminApiSlice';
+import {toast} from 'react-toastify';
 
 const AdminHome = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [logoutApiCall] = useAdminLogoutMutation();
 
   const goToUserList = () => {
     navigate('/user-list');
   };
+
+  const logoutHandler =async () => {
+    try {
+      await logoutApiCall().unwrap();
+      dispatch(adminLogout());
+      navigate('/admin-login')
+    } catch (error) {
+      console.log(error);
+      
+    }
+   
+  }
 
   return (
     <Container 
@@ -33,6 +51,16 @@ const AdminHome = () => {
             style={{ backgroundColor: '#555', borderColor: '#666' }} 
           >
             Go to User List
+          </Button>
+
+          <Button 
+            variant="danger" 
+            size="lg" 
+            onClick={logoutHandler}
+            className="mt-4"
+            style={{ marginLeft: '10px' }} 
+          >
+            Logout
           </Button>
         </Col>
       </Row>

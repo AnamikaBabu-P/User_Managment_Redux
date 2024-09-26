@@ -57,9 +57,12 @@ const UserList = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-
-      <button onClick={createHandler}>create User</button>
-
+       <div className="form-group mb-4" >
+       <button onClick={createHandler} className="create-user-btn">
+       Create User
+    </button>
+       </div>
+     
       <table className="table table-striped table-hover table-dark">
         <thead>
           <tr>

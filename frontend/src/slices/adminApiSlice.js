@@ -53,4 +53,10 @@ export const adminApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useAdminLoginMutation, useAdminLogoutMutation,useUserDetailsQuery, useUserDataMutation, useEditUserMutation, useCreateUserMutation, useDeleteUserMutation  } = adminApiSlice;
+export const { useAdminLoginMutation, 
+    useAdminLogoutMutation,
+    useUserDetailsQuery, 
+    useUserDataMutation, 
+    useEditUserMutation, 
+    useCreateUserMutation, 
+    useDeleteUserMutation  } = adminApiSlice;

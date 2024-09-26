@@ -5,7 +5,7 @@ import { useDispatch, useSelector} from 'react-redux';
 import FormContainer from "../components/FormContainer";
 import { toast } from 'react-toastify'
 import Loader from "../components/Loader";
-import { useRegisterMutation } from "../slices/usersApiSlice";
+import { useCreateUserMutation } from "../slices/adminApiSlice";
 import { setCredentials } from "../slices/authSlice";
 
 
@@ -15,19 +15,29 @@ const RegisterScreen = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [image, setImage ] = useState(null);
-    const [imagePreview, setImagePreview ] = useState(null);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
-    const [register, { isLoading }] = useRegisterMutation();
-    const { userInfo } = useSelector((state) => state.auth);
-
-    useEffect(() => {
-        if(userInfo) {
-            navigate('/');
+    const [createUser, { isLoading }] = useCreateUserMutation();
+    
+    const previewFile = async(e)=>{
+        const file = e.target.files[0]
+        setFileToBase(file)
+      }
+      const setFileToBase = (file)=>{
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = ()=>{
+          setImage(reader.result)
         }
-    },[navigate, userInfo]);
+      }
+
+    // useEffect(() => {
+    //     if(userInfo) {
+    //         navigate('/');
+    //     }
+    // },[navigate, userInfo]);
 
     const submitHandler= async(e)=>{
         e.preventDefault();
@@ -35,17 +45,19 @@ const RegisterScreen = () => {
             toast.error('Passwords do not macth');
         } else{
             try {
-                const formData = new FormData();
-                formData.append('name',name);
-                formData.append('email',email);
-                formData.append('password',password);
-                formData.append('image',image);
+                // const formData = new FormData();
+                // formData.append('name',name);
+                // formData.append('email',email);
+                // formData.append('password',password);
+                // formData.append('image',image);
 
-                const res = await register(formData).unwrap();
-                console.log(res,'rreeeeeeeeessssssssssss');
+                const res = await register({name, email, password, image}).unwrap();
                 
                 dispatch(setCredentials({...res}));
-                navigate('/');
+                if(res){
+                    navigate('/user-list');
+                    toast.success('User created Successfully')
+                }
             } catch (err) {
                 console.log(err);
                 
@@ -54,22 +66,22 @@ const RegisterScreen = () => {
         }
     }
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
+    // const handleImageChange = (e) => {
+    //     const file = e.target.files[0];
         
-        if(file){
-            setImage(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    //     if(file){
+    //         setImage(file);
+    //         const reader = new FileReader();
+    //         reader.onloadend = () => {
+    //             setImagePreview(reader.result);
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
 
   return (
     <FormContainer>
-      <h1 style={{ color: '#fff', marginLeft:'200px' }}>Sign Up</h1>
+      <h1 style={{ color: '#fff', marginLeft:'200px' }}>Create User</h1>
 
       <Form onSubmit={submitHandler}>
       <Form.Group className='my-2' controlId='name'>
@@ -112,7 +124,7 @@ const RegisterScreen = () => {
             ></Form.Control>
         </Form.Group>
 
-        <Form.Group className='my-2' controlId='image'>
+        {/* <Form.Group className='my-2' controlId='image'>
                     <Form.Label style={{ color: '#fff' }}>Upload Image</Form.Label>
                     <input
                         type='file'
@@ -128,7 +140,17 @@ const RegisterScreen = () => {
                             />
                         </div>
                     )}
-                </Form.Group>
+                </Form.Group> */}
+
+<Form.Group className="my-2" controlId="image">
+          <Form.Label>Image</Form.Label>
+          <Form.Control
+            type="file"
+            name='image'
+            onChange = {previewFile}
+          ></Form.Control>
+          {image && <img src={image} height='200' alt="Image preview" /> }
+        </Form.Group>
 
 
         {isLoading && <Loader/>}
@@ -138,7 +160,7 @@ const RegisterScreen = () => {
                   borderColor: '#666',
                   color: '#fff',
                 }}>
-            Sign Up
+            Create
         </Button>
 
         <Row className='py-3'>
