@@ -15,7 +15,6 @@ const RegisterScreen = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [image, setImage ] = useState(null);
-    const [imagePreview, setImagePreview ] = useState(null);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -29,20 +28,27 @@ const RegisterScreen = () => {
         }
     },[navigate, userInfo]);
 
+    const previewFile = (e) => {
+        const file = e.target.files[0];
+        setFileToBase(file);
+      };
+    
+      const setFileToBase = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setImage(reader.result);
+          console.log(reader.result)
+        };
+      };
+
     const submitHandler= async(e)=>{
         e.preventDefault();
         if(password !== confirmPassword){
             toast.error('Passwords do not macth');
         } else{
             try {
-                const formData = new FormData();
-                formData.append('name',name);
-                formData.append('email',email);
-                formData.append('password',password);
-                formData.append('image',image);
-
-                const res = await register(formData).unwrap();
-                console.log(res,'rreeeeeeeeessssssssssss');
+                const res = await register({name, email, password, image}).unwrap();
                 
                 dispatch(setCredentials({...res}));
                 navigate('/');
@@ -53,19 +59,6 @@ const RegisterScreen = () => {
             }
         }
     }
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        
-        if(file){
-            setImage(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
   return (
     <FormContainer>
@@ -112,23 +105,11 @@ const RegisterScreen = () => {
             ></Form.Control>
         </Form.Group>
 
-        <Form.Group className='my-2' controlId='image'>
-                    <Form.Label style={{ color: '#fff' }}>Upload Image</Form.Label>
-                    <input
-                        type='file'
-                        accept='image/*'
-                        onChange={handleImageChange}
-                    />
-                    {imagePreview && (
-                        <div style={{ marginTop: '10px' }}>
-                            <img
-                                src={imagePreview}
-                                alt='Preview'
-                                style={{ maxWidth: '100px', maxHeight: 'auto', borderRadius: '8px', marginTop: '10px' }}
-                            />
-                        </div>
-                    )}
-                </Form.Group>
+      <Form.Group className="my-2" controlId="image">
+          <Form.Label>Image</Form.Label>
+          <Form.Control type="file" name="image" onChange={previewFile}></Form.Control>
+          {image && <img src={image} height="200" alt="Image preview" className="mt-3" />}
+        </Form.Group>
 
 
         {isLoading && <Loader/>}

@@ -15,7 +15,7 @@ const ProfileScreen = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [image,setImage] = useState('');
-    console.log(image,'the img')
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -38,8 +38,7 @@ const ProfileScreen = () => {
     useEffect(() => {
         setName(userInfo.name);
         setEmail(userInfo.email);
-        console.log(userInfo)
-        setImage(userInfo.image);
+        setImage(userInfo.image?.url);
     },[userInfo.name, userInfo.email, userInfo.image]);
 
     const submitHandler= async(e)=>{

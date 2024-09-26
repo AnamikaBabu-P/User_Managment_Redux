@@ -1,34 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import generateToken from '../utils/generateToken.js';
 import User from '../models/userModel.js';
-import cloudinary from '../utils/cloudinary.js';
-
-import multer from 'multer';
-import { updateUser } from './adminController.js';
-
-const storage = multer.memoryStorage();
-const upload = multer({storage:storage});
-
-const handleFileUpload = async (req, res, next) => {
-    try {
-            cloudinary.v2.uploader.upload_stream({ 
-                folder: "products", 
-                transformation: [{ width: 768, height: 1152, crop: "fill" }] 
-            }, (error, result) => {
-                if (error) {
-                    return next(error);
-                }
-                req.file.cloudinary_public_id = result.public_id;
-                req.file.cloudinary_url = result.secure_url;
-                
-                    next();
-                
-            }).end(req.file.buffer);
-    } catch (error) {
-        console.log(error.message)
-        next(error);
-    }
-};
+import cloudinaryV2 from '../utils/cloudinary.js';
 
 
 const authUser = asyncHandler(async (req,res) =>{
@@ -51,32 +24,27 @@ const authUser = asyncHandler(async (req,res) =>{
 
 const registerUser = asyncHandler(async (req,res) =>{
     
-    const {name,email,password} = req.body;
-
-    const image = {
-        public_id: req.file.cloudinary_public_id,
-        url: req.file.cloudinary_url};
+    const {name,email,password, image} = req.body;
     
     const userExists = await User.findOne({email});
     if(userExists){
         res.status(400);
         throw new Error('User already exists');
     }
-    // const result = await cloudinary.uploader.upload(req.file.buffer,{
-    //     folder: "users",
-    //     width: 300,
-    //     crop: 'scale',
-    //     resource_type: 'image',
-    // })
-    // console.log(result,'yyyyyyyyyyy');
+
+    const result = await cloudinaryV2.uploader.upload(image,{
+        folder:'user',
+    })
     
     const user = await User.create({
         name,
         email,
         password,
-        image
+        image:{
+            public_id:result.public_id,
+            url: result.secure_url,
+        }
     });
-    console.log(user,'sssssssssssssssssss');
     
 
     if(user) {
@@ -85,7 +53,10 @@ const registerUser = asyncHandler(async (req,res) =>{
             _id: user._id,
             name: user.name,
             email: user.email,
-            image: user.image.url
+            image: {
+                public_id:result.public_id,
+                url: result.secure_url,
+            }
         });
     } else {
         res.status(400);
@@ -107,22 +78,28 @@ const getUserProfile = asyncHandler(async (req,res) =>{
         _id: req.user._id,
         name: req.user.name,
         email: req.user.email,
-        image: req.user.image,
-    }
+    };
     res.status(200).json(user);
 });
 
 const updateUserProfile = asyncHandler(async (req,res) =>{
     const user = await User.findById(req.user._id);
-             console.log(req.body,'iiiiiiiiiiiii');
              
     if(user){
+        const result = await cloudinaryV2.uploader.upload(req.body.image,{
+            folder:'user',
+        })
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
+        user.image={
+            public_id:result.public_id,
+            url:result.secure_url
+        }
         if(req.body.password){
             user.password = req.body.password;
         }
         const updatedUser = await user.save();
+
         res.status(200).json({
             _id: updatedUser._id,
             name: updatedUser.name,
@@ -140,6 +117,4 @@ export {
     logoutUser,
     getUserProfile,
     updateUserProfile,
-    upload,
-    handleFileUpload
 }
