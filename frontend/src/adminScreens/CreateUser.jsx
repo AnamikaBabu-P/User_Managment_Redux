@@ -33,31 +33,19 @@ const RegisterScreen = () => {
         }
       }
 
-    // useEffect(() => {
-    //     if(userInfo) {
-    //         navigate('/');
-    //     }
-    // },[navigate, userInfo]);
-
     const submitHandler= async(e)=>{
         e.preventDefault();
         if(password !== confirmPassword){
             toast.error('Passwords do not macth');
         } else{
             try {
-                // const formData = new FormData();
-                // formData.append('name',name);
-                // formData.append('email',email);
-                // formData.append('password',password);
-                // formData.append('image',image);
 
-                const res = await register({name, email, password, image}).unwrap();
+                const res = await createUser({name, email, password, image}).unwrap();
                 
                 dispatch(setCredentials({...res}));
-                if(res){
+                
                     navigate('/user-list');
-                    toast.success('User created Successfully')
-                }
+                  
             } catch (err) {
                 console.log(err);
                 
@@ -66,18 +54,6 @@ const RegisterScreen = () => {
         }
     }
 
-    // const handleImageChange = (e) => {
-    //     const file = e.target.files[0];
-        
-    //     if(file){
-    //         setImage(file);
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             setImagePreview(reader.result);
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // };
 
   return (
     <FormContainer>
@@ -124,25 +100,7 @@ const RegisterScreen = () => {
             ></Form.Control>
         </Form.Group>
 
-        {/* <Form.Group className='my-2' controlId='image'>
-                    <Form.Label style={{ color: '#fff' }}>Upload Image</Form.Label>
-                    <input
-                        type='file'
-                        accept='image/*'
-                        onChange={handleImageChange}
-                    />
-                    {imagePreview && (
-                        <div style={{ marginTop: '10px' }}>
-                            <img
-                                src={imagePreview}
-                                alt='Preview'
-                                style={{ maxWidth: '100px', maxHeight: 'auto', borderRadius: '8px', marginTop: '10px' }}
-                            />
-                        </div>
-                    )}
-                </Form.Group> */}
-
-<Form.Group className="my-2" controlId="image">
+        <Form.Group className="my-2" controlId="image">
           <Form.Label>Image</Form.Label>
           <Form.Control
             type="file"
