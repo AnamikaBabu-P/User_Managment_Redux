@@ -8,13 +8,13 @@ const authAdmin = asyncHandler(async (req,res) =>{
     
     if(email === process.env.ADMIN_EMAIL && 
         password === process.env.ADMIN_PASSWORD) {
-            // const admin = await User.findOne({email});
-            generateToken(res,process.env.ADMIN_EMAIL);
-            // res.status(201).json({
-            //     _id: admin._id,
-            //     name: admin.name,
-            //     email: admin.email
-            // });
+            const admin = await User.findOne({email});
+            generateToken(res,admin._id);
+            res.status(201).json({
+                _id: admin._id,
+                name: admin.name,
+                email: admin.email
+            });
         
     } else {
         res.status(401);

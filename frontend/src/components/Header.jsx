@@ -10,6 +10,7 @@ import { logout } from '../slices/authSlice';
 const Header = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logoutApiCall] = useLogoutMutation();
@@ -24,6 +25,7 @@ const Header = () => {
       
     }
   }
+  
   return (
     <header>
       <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
@@ -36,6 +38,7 @@ const Header = () => {
             <Nav className='ms-auto'>
               { userInfo ? (
                 <>
+                
                 <NavDropdown title = {userInfo.name} id='username'>
                   <LinkContainer to='/profile'>
                     <NavDropdown.Item> Profile </NavDropdown.Item>

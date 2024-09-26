@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { adminLogout } from '../slices/adminAuthSlice';
+import { logout } from '../slices/adminAuthSlice';
 import { useAdminLogoutMutation } from '../slices/adminApiSlice';
 import {toast} from 'react-toastify';
 
@@ -18,7 +18,7 @@ const AdminHome = () => {
   const logoutHandler =async () => {
     try {
       await logoutApiCall().unwrap();
-      dispatch(adminLogout());
+      dispatch(logout());
       navigate('/admin-login')
     } catch (error) {
       console.log(error);
