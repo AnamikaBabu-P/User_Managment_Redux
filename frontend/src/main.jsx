@@ -10,11 +10,17 @@ import { Provider } from 'react-redux';
 import App from './App.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css'
+
 import PrivateRoute from './components/PrivateRoute.jsx';
+import AdminPrivateRoute from './components/adminPrivateRoute.jsx';
+
 import HomeScreen from './screens/HomeScreen.jsx';
 import LoginScreen from './screens/LoginScreen.jsx';
 import RegisterScreen from './screens/RegisterScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
+
+import AdminLogin from './adminScreens/adminLogin.jsx';
+import AdminHome from './adminScreens/adminHome.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,10 +28,18 @@ const router = createBrowserRouter(
       <Route index= {true} path='/' element= {<HomeScreen/>}/>
       <Route path='/login' element= {<LoginScreen/>}/>
       <Route path='/register' element={<RegisterScreen/>}/>
+
+      <Route path='/admin-login' element={<AdminLogin/>}/>
+
       {/*private routes*/}
       <Route path='' element = {<PrivateRoute/>}>
       <Route path='/profile' element={<ProfileScreen/>}/>
       </Route>
+      
+      <Route path='' element = {<AdminPrivateRoute/>}>
+      <Route path='/admin-home' element={<AdminHome/>}/>
+      </Route>
+
     </Route>
   )
 )

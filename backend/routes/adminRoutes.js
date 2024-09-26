@@ -4,7 +4,7 @@ const adminRouter = express.Router();
 
 import { authAdmin } from '../controllers/adminController.js';
 
-adminRouter.post('/auth-admin',authAdmin);
+adminRouter.post('/admin-login',authAdmin);
 
 
 export default adminRouter;

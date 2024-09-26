@@ -9,8 +9,6 @@ const storage = multer.memoryStorage();
 const upload = multer({storage:storage});
 
 const handleFileUpload = async (req, res, next) => {
-    
-    console.log(req.file)
     try {
             cloudinary.v2.uploader.upload_stream({ 
                 folder: "products", 
