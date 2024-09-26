@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useUserDetailsQuery, useDeleteUserMutation } from '../slices/adminApiSlice';
@@ -9,9 +9,12 @@ const UserList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [deleteUser] = useDeleteUserMutation();
-  const { data: userData, error, isLoading } = useUserDetailsQuery();
+ 
+  const { data: userData, error, isLoading , refetch } = useUserDetailsQuery();
   const [search, setSearch] = useState('');
-
+  useEffect(() => {
+    refetch(); 
+  }, [navigate, refetch]);
   const editHandler =async (id)=>{
     try {
      navigate(`/user-data/${id}`)

@@ -120,12 +120,6 @@ const RegisterScreen = () => {
                 }}>
             Create
         </Button>
-
-        <Row className='py-3'>
-            <Col style={{ color: '#fff' }}>
-                Already have an account? <Link to='/login' style={{ color: '#fff' }}>Login</Link>
-            </Col>
-        </Row>
       </Form>
     </FormContainer>
   )
