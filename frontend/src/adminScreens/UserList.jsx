@@ -17,7 +17,7 @@ const UserList = () => {
   }, [navigate, refetch]);
   const editHandler =async (id)=>{
     try {
-     navigate(`/user-data/${id}`)
+     navigate(`/admin/user-data/${id}`)
     } catch (error) {
       console.log(error);
     }
@@ -25,7 +25,7 @@ const UserList = () => {
 
   const createHandler = async (id) => {
     try {
-      navigate("/create-user");
+      navigate("/admin/create-user");
     } catch (error) {
       console.log(error);
     }

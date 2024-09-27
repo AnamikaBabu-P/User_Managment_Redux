@@ -12,13 +12,13 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         }),
         adminLogout: builder.mutation({
             query: () => ({
-                url: `${ADMIN_URL}/admin-logout`,
+                url: `${ADMIN_URL}/admin/logout`,
                 method: 'POST',
             })
         }),
         userDetails : builder.query({
             query: () => ({
-                url: `${ADMIN_URL}/user-list`,
+                url: `${ADMIN_URL}/admin/user-list`,
                 method: 'GET',
             })
         }),

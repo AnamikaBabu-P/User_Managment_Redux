@@ -58,7 +58,7 @@ const UserEdit = () => {
         image 
       }).unwrap();
 
-      navigate('/user-list');
+      navigate('/admin/user-list');
       toast.success('Profile updated');
     } catch (err) {
       toast.error(err?.data?.message || err.error);

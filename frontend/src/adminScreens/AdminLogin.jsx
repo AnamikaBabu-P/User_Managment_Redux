@@ -28,7 +28,7 @@ const AdminLogin = () => {
             dispatch(setAdminCredentials({...res}));
             
             if(res){
-                navigate('/admin-home');
+                navigate('/admin/home');
             }
             
         } catch (err) {

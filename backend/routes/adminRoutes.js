@@ -12,8 +12,8 @@ import { authAdmin,
  } from '../controllers/adminController.js';
 
 adminRouter.post('/admin-login',authAdmin);
-adminRouter.post('/admin-logout',logoutAdmin);
-adminRouter.get('/user-list',viewUser);
+adminRouter.post('/admin/logout',logoutAdmin);
+adminRouter.get('/admin/user-list',viewUser);
 adminRouter.get('/user-data/:id',userData);
 adminRouter.put('/update-user',updateUser);
 adminRouter.post('/create-user',createUser);

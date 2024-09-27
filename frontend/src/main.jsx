@@ -40,10 +40,10 @@ const router = createBrowserRouter(
       </Route>
       
       <Route path='' element = {<AdminPrivateRoute/>}>
-      <Route path='/admin-home' element={<AdminHome/>}/>
-      <Route path='/user-list' element={<UserList/>}/>
-      <Route path='/user-data/:id' element={<UserEdit/>}/>
-      <Route path='/create-user' element={<CreateUser/>}/>
+      <Route path='/admin/home' element={<AdminHome/>}/>
+      <Route path='/admin/user-list' element={<UserList/>}/>
+      <Route path='/admin/user-data/:id' element={<UserEdit/>}/>
+      <Route path='/admin/create-user' element={<CreateUser/>}/>
       </Route>
 
     </Route>

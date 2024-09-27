@@ -12,7 +12,7 @@ const AdminHome = () => {
   const [logoutApiCall] = useAdminLogoutMutation();
 
   const goToUserList = () => {
-    navigate('/user-list');
+    navigate('/admin/user-list');
   };
 
   const logoutHandler =async () => {

@@ -44,7 +44,7 @@ const RegisterScreen = () => {
                 
                 dispatch(setCredentials({...res}));
                 
-                    navigate('/user-list');
+                    navigate('/admin/user-list');
                   
             } catch (err) {
                 console.log(err);
