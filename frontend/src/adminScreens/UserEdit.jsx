@@ -55,7 +55,7 @@ const UserEdit = () => {
         _id: id,
         name,
         email,
-        image // No password field, so it keeps the old password
+        image 
       }).unwrap();
 
       navigate('/user-list');

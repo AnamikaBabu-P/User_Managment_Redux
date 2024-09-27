@@ -34,7 +34,7 @@ const UserList = () => {
   const deleteHandler = async (id) => {
     try {
       const data = await deleteUser(id);
-      navigate('/user-list')
+      refetch();
       toast.success("User Deleted");
     } catch (error) {
       console.log(error);
